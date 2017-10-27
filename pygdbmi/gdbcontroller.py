@@ -48,7 +48,7 @@ class GdbController():
         New GdbController object
     """
 
-    def __init__(self, gdb_path='gdb', gdb_args=['--nx', '--quiet', '--interpreter=mi2'], verbose=False):
+    def __init__(self, gdb_path='gdb', gdb_args=['--nx', '--quiet', '--interpreter=mi2'], verbose=False, extra_popen={}):
         self.verbose = verbose
         self.mutex = Lock()
         self.abs_gdb_path = None  # abs path to gdb executable
@@ -71,7 +71,7 @@ class GdbController():
         # Use pipes to the standard streams
         # In UNIX a newline will typically only flush the buffer if stdout is a terminal.
         # If the output is being redirected to a file, a newline won't flush
-        self.gdb_process = subprocess.Popen(self.cmd, shell=False, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.gdb_process = subprocess.Popen(self.cmd, shell=False, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, **extra_popen)
 
         _make_non_blocking(self.gdb_process.stdout)
         _make_non_blocking(self.gdb_process.stderr)
